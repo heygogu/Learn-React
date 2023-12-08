@@ -1,0 +1,19 @@
+Okay, What I learned in this Session ?
+
+1. React is a Library developed by Facebook Developers
+2. We have to mount the react code into an HTML element as a root.
+
+Question- Can React co-exist with HTML and JavaScript
+Ans- Yes, Just not in the react related container
+cause react overwrites whatever specified in (let's say div tag (root)) it's target container
+and places itself
+
+How to Use the React with Bare Mininum Efforts?
+-> by using cdn links of react 
+
+Learnings: createElement(React),createRoot(ReactDOM)
+
+1.createElement takes three arguments- tag name, object,text to fill in tag
+    object is for passing the props to the tag, props ..consider as attributes
+
+Also, almost every element is refered as object in React

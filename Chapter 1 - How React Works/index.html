@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!--
+        <h1>Hello World</h1>
+
+        ** Using JavaScript 
+
+        I don't want vanilla HTML , I want to create this h1 tag using JS and put it in div
+        How to do that?
+
+         <script>
+            const heading = document.createElement("h1");
+            heading.innerHTML = "Hello World";
+
+            const target = document.getElementById("root");
+            target.appendChild(heading);
+        </script>
+
+
+        **** Using React
+        <script>
+ const heading = React.createElement("h1", {//can pass id,class for h1}, "Hellow Worlddd");
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(heading);
+        </script>
+
+
+        //How to handle detailed structure in React
+        Suppose I want
+
+        <div id="inner">
+            <h1>H1 Heading</h1>
+            <h2>H2 headng</h2>
+        </div>
+
+        this code, in root div
+
+        Code:
+        <script>
+            const heading1 = React.createElement("h1", {}, "H1 Heading");
+            const heading2 = React.createElement("h2", {}, "H2 Heading");
+
+            const container = React.createElement("div", { id: "inner" }, [
+                heading1,
+                heading2,
+            ]);
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(container);
+        </script>
+
+
+        we passed both heading as an array of objects
+
+    -->
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    
+  </body>
+</html>

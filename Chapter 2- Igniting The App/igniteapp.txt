@@ -1,0 +1,149 @@
+Parcel is a Bundler for our react app
+parcel helps us minify our codes and remove console.logs to improve performance
+- Parcel also takes care of older versions of browser
+--parcel uses consistent hashing algo to cache things up
+-- parcel is a zero config bundler- you don't need a lot of configuration
+like other bundler(other bundler have reduced their config)
+-- parcel doesn't do everything on its own , it leverages other node modules
+-- parcel uses TRANSITIVE DEPENDENCIES
+-- parcel don't minify on dev build , minifies on prod. build
+
+when you do npm init you get package.json
+when you install parcel you get package-lock.json
+
+How to install Parcel
+npm install -D parcel
+what is D?
+D means dev dependency,means I want to limit this to our development environment,
+In future we will see the packages with global dependencies.
+
+
+what is dependency(general)- means our app needs many packages to run , to get optimized.
+for that we need different packages on which our our depends for better efficiency
+
+Difference b/w package.json and package-lock.json
+Homework - study about caret and tilde before the parcel version in package.json(dev dependencies
+section) 
+^ caret - 
+~ tilde -
+
+when any of both are declared they update the parcel version automatically
+there is just a difference that one supports minor patches and one support major patches
+
+What if I dont use  ^ or ~ , then we are specifying that we will only use that specific version
+of that package 
+
+Now let's come back to the difference
+
+when a new version of the parcel realeases then the version in package.json will show the same
+version, but to know the exact current version of our packages(any) used during the production
+, we can look into package-lock.json file(locks the new version and keep it safe)
+
+Important things to take care about package-lock.json
+
+-Never put this file in gitignore
+- it maintains the hash for updated packages
+this hash ensures the exact version of package on my system is the exact same version on
+production system.. it maintains the integrity in simple words .
+you can see this hash in the integrity section under your specific package
+
+
+
+Now you may notice nodemodules folder in your directory structure too after installing
+a package from npm. What is it and why it is over here?
+whenever you install something from npm it gets saved into this folder
+Node modules folder is kind of a database for your npm
+Why there are so many files then If I only installed one package- cause that package 
+also have its dependencies(transitive dependencies)
+
+nodemodules is heavy so put it in gitignore , a person can install these on their own
+using npm install and our package-lock.json and package.json have enough info about 
+generating node_modules again as it keeps track of everything
+
+
+let's install react and react-dom as packages form npm
+npm install react
+npm install react-dom
+
+see these are global dependencies
+
+now let's ignite our app
+npx parcel index.html
+
+npx-   execute using npm
+index.html-   entry point
+
+now you have to import these in app.js file
+
+Now the app.js will behave as a module not as a proper js file
+so the line
+<script src="App.js"></script> will give errors in browser
+cause browser doesn't get import statements
+
+to tell the browser that it is a module do this in html file
+<script type="module" src="App.js"></script> 
+
+
+
+New React update
+import React from "react"
+import ReactDOM from "react-dom"
+the line 81 will give warning cause in latest react we have to use
+import ReactDOM from "react-dom/client"
+
+
+okay so whenver we do changes in our app the parcel will make changes automatically 
+on the browser screen as parcel is using Hot Module Replacement
+
+How does Parcel know that I did some changes - cau se there is something as file watcher
+algorithms used by parcel, this algo is written in c++ 
+
+
+ok ok look at the left panel 
+there are two new folders 
+parcel-cache and dist
+
+parcel- cache: parcel creates them on its own to maintain algos and
+reloading, also maintains cache here
+
+dist: after npx parcel index.html command
+parcel creates faster dev build for us and keeps the files minified for us
+and host it on a server(localhost for now)
+- also parcel takes care of media by optimizing it
+- also does caching while development
+    that is why it takes less time to build subsequent updates
+- if images come from backend then it doesn't
+
+How to ask parcel to make a production build
+npx parcel build index.html (optional for now)
+parcel will all these build files into my dist folder
+
+we are building our app on http right now -localhost
+parcel gives us functionality for https
+npx parcel indedx.html --https(don't do that now cause we will get errors)
+cause chrome doesn't trust our localhost for https
+localhost URl if you run it - https://localhost:XXXX 
+and it will take more time to build https server cause we are changing parcel
+algorithms
+
+
+
+
+
+come back to http
+
+//Interview Question for Parcel
+Should we push .parcel-cache in gitignore ???
+- Yessss, don't upload on github , put in gitignore .. WHY?
+---anything which is auto generated will be put inside gitignore like
+   node modules, dist,.parcel-cache
+
+
+browserslist package - used by parcel by default 
+can add it in package.json .. it accepts an array
+"browserslist":[
+    "last 2 versions",
+]
+
+if you write like this it supports last 2 versions of every browser
+How to get this string - www.browerslist.dev
