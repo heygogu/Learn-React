@@ -147,3 +147,5 @@ can add it in package.json .. it accepts an array
 
 if you write like this it supports last 2 versions of every browser
 How to get this string - www.browerslist.dev
+
+next chapter is 3
