@@ -1,0 +1,608 @@
+***
+
+Question- What is a PolyFill ?
+Ans- 
+     A code which is a replacement for the newer version of the code is called a Polyfill.
+     Polyfill is compatible with older versions of browsers
+
+Example 1- Let's say our browser doesn't underatand the promises (ES6), then a polyfill can be generated 
+           so that It can be understood by the older versions of the browser.
+
+Example 2- If there is a new function in js update (let's say .map() function) and our old browser 
+           does not support it so what can a polyfill do ? 
+           It will create a custom function which behaves like the original .map() function
+
+MILLION DOLLAR Question- WHO MAKES THE POLYFILLS ?
+Ans- Babel Package in Javascript does it , it uses browserslist package to keep track of versions of the browsers
+     There are some other functions of Babel which you can see further in this file as we go ahead
+
+     In simple terms Babel takes New Code and Create a Polyfill comaptible for Older browsers.
+
+Let's Revise SuperPowers of Parcel :
+  Hot Module Reloading/replacement
+  File Watchers - written in c++
+  Minify the code
+  Code Splitting
+  Caching
+  Compression
+  Media Optimization
+  Easy to configure
+  Tree Shaking
+
+  What is Tree Shaking ?
+  - Removing the unwanted code
+  Example- Suppose you have imported a library in your code and the library contains 50 functions and you only used 
+            5 functions , so Parcel use Tree Shaking to Ignore all unused packages while Bundling the code
+
+  Other Bundlers are - WebPack, Vite , Parcel
+  Note- The default create-react-app uses Webpack and Babel
+
+  Topic - Creating Custom Scripts :
+    Everytime I run my code I have to use
+
+    npx parcel index.html 
+    
+    If it may look annoying you can create a script for it using your package.json
+
+    Step 1- Open package.json
+    Step 2- Go to scripts section
+
+            "scripts":{
+              //Add Script here
+              "start":"parcel index.html",
+              "test":"jest" //this one is already there
+            }
+
+    ** Now you can use it like this - npm run start    or      npm start 
+
+    How to the command for build? -  npx build parcel index.html
+    You can shorten this too.
+    
+    Step 1- Open package.json
+    Step 2- Go to scripts section
+
+            "scripts":{
+              //Add Script here
+              "start":"parcel index.html",
+              "build":"parcel build index.html",
+              "test":"jest" //this one is already there
+            }
+
+    ** Now you can use it like this - npm run build
+      
+      NOTE- Just remove the npx from the start and make it a script.
+
+
+Correction From Previous Chapter- Babel or say Parcel does not remove console.logs by default , 
+                                Babel reuires a package for that =>    bable-plugin-tansfrom-remove-console 
+
+             Read about it on NPM and use this creating .babelrc file in your code 
+
+
+React Keys:-             
+
+  -Whenever we are having an array(having children) passed to a element (div for example) created,
+  using React.createElement, These children are known as siblings.
+  if I have multiple siblings , we always have to give them keys to stop react from rerendering all the code again
+  To give keys we pass keys in props object
+
+What is a key - anything that uniquely identifies an item
+
+{
+    key:"h1"
+}
+
+Why do we need Key ?
+Read diffing algorithm in react documentation
+read react reconililiation on legacy.reactjs 
+
+
+** render means updating something in DOM - We will see Virtual DOM Later
+
+For a Quick Idea about keys read this : 
+    If I have 
+
+1::=>
+    <ul>
+      <li>Rohit<li>
+      <li>Mohit<li>
+    <ul>
+
+    And I add a new element in this list using react like this
+
+2::=> 
+
+    <ul>
+      <li>Manisha</li>
+      <li>Rohit<li>
+      <li>Mohit<li>
+    <ul>
+
+    Then the react have to do a lot of work,
+    it have to rerender everything cause it doesn't know which li is which.. so react uses
+    cocept of keys which let's react to identify which new component to render
+
+    What if I change 1::=> like this 
+
+3::=>
+
+     <ul>
+      <li>Rohit<li>
+      <li>Mohit<li>
+      <li>Manisha</li>
+    <ul>
+
+    Then React will use the Diffing Algo and won't render the whole thing again , React Matches the Roots
+
+
+React uses keys to track the sibling.. and we can not have same key for two siblings
+
+************************************************************************************
+
+Anyway, Moving Ahead,
+
+
+
+Let's talk about createElement
+- createElement always returns an object
+- then object is converted into HTML code by reactdom 
+- then it is put up in real DOM 
+
+Suppose I want to create this
+
+    <div>
+      <h1>some text</h1>
+      <ul>
+          <li>Rohit<li>
+          <li>Mohit<li>
+          <li>Manisha</li>
+      </ul>
+    </div>
+
+
+Creating this things will do a huge mess in program using React.createElement
+So in big projects it will create a mess.. we need something else
+
+
+Even if we do:-
+
+   import{createElement} from "react"
+
+    or
+
+   import {createElement as ce} from "react"
+
+
+The code will still look like Shit, :(
+
+*****
+
+So instead of using this we use the JSX 
+
+
+Question - What is JSX ?
+           Firstly, this is not Javascript XML , people call it this , so you can call it too 
+           JSX uses a syntax like HTML, or say fancy way of writing the HTML
+
+           How to create a h1 using JSX
+
+            const heading=(
+
+               <h2 id="t",key="1">
+                    Namste React
+               <h2>
+                //this above line is called JSX Expression
+            );
+
+Remember- this is not a string inside of h1 , it is just like HTML.
+
+And (); is there cause it is multiline
+
+Doubt - Is JSX means HTML inside Javascript???- Seems like Yes ?
+      - Nooooo
+      - JSX is a HTML like syntax (see the above h1 code )
+
+
+What are the differences between HTML and JSX , Read on Internet.
+
+      class:"classname" in HTML and className in JSX
+
+
+- JSX was developed by Facebook Engineers, don't call it HTML in Interviews
+
+*** Major differnces between JSX and HTML
+
+   -JSX is a syntax while HTML is a Markup language.
+   -JSX allows you to include expressions and functions within the syntax,
+    while HTML only allows for static text - will see this in this file only
+   -JSX elements are transformed into JavaScript function calls,
+    while HTML elements are rendered as DOM nodes.
+   -JSX can be used to create dynamic user interfaces, 
+    while HTML is mainly used for static content.
+   -JSX is type-safe, meaning that it checks for errors at compile-time, unlike HTML.
+
+   Read More on Internet
+
+
+
+
+
+Question- Does browser understand jsx ????
+Answer-   Noooooooooooo
+
+
+It(JSX) can be understooodddd by BABEL package- go to bablejs.org
+
+        Must read on it, it is a compiler for next gen Javascript
+        BABLE is amaaaaaazinggggg really , it is a javascript libarary,
+
+        - BABLE takes JSX and gives you javascript code
+          read its documentation on github to contribute if you want
+
+And remember parcels documentation is amaaazingg too
+
+        Babel creates an abstract syntax tree(AST) while compiling each word in JSX. 
+
+        BABEL is like -
+        ooh there is an angular bracket It should be an JSX code
+        ohh its id , I should create an id in HTML 
+
+=> Babel understands JSX
+
+   Watch video on AST by Akshay Saini on youtube
+
+
+
+
+
+NEXT TOPIC =>>> How React Works ?
+
+    React.createElement converted to => object => rendered on HTML(DOM)
+
+
+-How JSX Works ?
+
+    JSX use React.createElement behind the scenes ==>  object  =>HTML(DOM)
+
+Who converts JSX to React.createElement - BABEL (JS Package)
+
+Go play with babeljs.com
+Read docs of it if you would like to know more
+
+
+=> Now read this , this is the NIRVANA you've been waiting for to hear
+
+        "BABEL is converting JSX into React Code and React Code is converted to 
+         Javascript then Javascript go on browser engine
+         and then browser engine uses Global Execution Context (Memory, Code) where a 
+         thread is created which reads code line by line and assign values to 
+         variables and while execution if there was an element creation script using javascript
+         then it creates the element and render it on HTML DOM"
+
+
+BABEL came along with parcel as a dependecy in our current code
+
+
+So, What does BABLE can do uptil Now
+
+- can remove console.logs using a sub package
+- can convert JSX to React Code
+- can create Pollyfills
+
+
+
+Let's move ahead
+
+
+
+**** NEXT TOPIC - React Components
+
+
+    REMEMBER that everything is a component in React 
+
+
+Types of Components- 
+1. Functional - New way of writing a component 
+2. Class Based - Old way of writing component
+
+    - We will use Functional based components in Upcoming Notes
+
+* Class Based components are important for Old codebases and for the purpose of INTERVIEWWWWW
+
+     Functional Components are nothing but Javascript Functions - Remember this Line
+
+
+***FUNCTION BASED COMPONENTS ==> 
+
+   Writing them:
+
+    const HeaderComponent=()=>{
+      //return JSX Expression
+    };
+
+ This is a Function Component (I used arrow function here)
+
+
+Question - What can they return ??(Functional Components ):
+          
+          - Some piece of JSX or 
+          - React ELement or
+          - Composition of a React element or
+          - component 
+
+
+Example:
+
+        const HeaderComponent=()=>{
+          return <h1>Helllloo(no string like HTML)</h1>;
+        };
+
+
+    *Points to note about Function Components:
+
+      - Name starts with a capital letter (not mandatory , just a convention)
+        to differentiate this from javascript or HTML, it's a good practice
+
+      - Functional Component is a normal function (remember till your last
+        breath, so it can be called as a function in another functional component)
+
+
+* Suppose I want a div with two headings in it
+
+        const HeaderComponent=()=>{
+            return <div><h1>Hello</h1><h2>Hellooo</h2></div>;
+        };
+
+    It looks complicated as our code goes in multiple lines , then 
+    I HAVE TO WRAP THIS IN PARENTHESIS.(mandatory to use for multiple line)
+
+
+        const HeaderComponent=()=>{
+          return (
+            <div>
+                <h1>Hello</h1>
+                <h2>Hellooo</h2>
+            </div
+          );
+        };
+
+
+  This looks coool....
+
+
+=> And and and... as we know , we can skip to writing return in arrow functions
+
+
+      const HeaderComponent=()=>(
+        <div>
+          <h1>Hello</h1>
+          <h2>Hellooo</h2>
+        </div
+      );
+
+
+  This looks more cool.....
+
+
+
+=> And Remember that, one Component can have one PARENT --- IMPORTANT
+
+    i.e - I can not write another div in it
+
+    OK if this above code is a HeaderComponent
+
+Then,
+
+    What is this as a whole:
+
+    const heading=(
+        <h2 id="t",key="1">Namste React<h2>
+    );
+
+
+   => It is a 'React Element' Bro
+
+  ** And how I rendered it - using  =>   root.render(heading);
+
+
+
+=> Then How to Render a Functional Component ???????????
+
+  - WHEN I HAVE TO RENDER MY FUNCTIONAL COMPONENT
+      
+      - I have to go like this => root.render(<HeaderComponent/>)  //SUPER Important
+
+
+      IT IS VERY IMPORTANT remember this
+
+
+
+
+=> Difference Between React Element and React Component?
+    
+    -Differnce between them is that React Element is like this(syntax based )
+
+      const heading=(
+        <h2> id="t",key="1">Namste React<h2>
+      );
+
+And how to make it React component
+
+      const Heading = () =>(
+          <h2> id="t",key="1">Namste React<h2>
+      );
+
+//Notice the differnece
+
+sooooooo,
+
+    -If I have a function which returns JSX then it is called a Component
+        also its a function returning jsx expression or react element 
+        so it becomes component
+
+
+    -If a JSX expression is assigned to a variable directly, then it is
+        React Element also can say a variable assigned a JSX code , and JSX becomes React and returns object
+        which is a React Element
+
+
+
+** PROGRAM
+
+      const heading=(
+          <h2> id="t",key="1">Namste React<h2>;
+      );
+
+    Question- How to use this heading element in component ??
+    Answer-
+
+    const HeaderComponent=()=>(
+        <div>
+
+            {heading}
+
+            <h1>Hello</h1>
+            <h2>Hellooo</h2>
+        </div>
+    );
+
+
+Question - Will a component work the same way as react element did here?
+
+          Like Writing a component in name {} ---->  NOOOOOOO it won't work like this 
+
+    
+    Then, How to put another component in the current one then ???
+
+
+    Ans- We Have to use it as TAG
+
+      const HeaderComponent=()=>(
+          <div>
+
+            <Title/>  => Calling a Functional Component
+
+              //suppose Title is a component defined somewhere returning a heading
+              //this syntax is even valid for class based component to call other component
+
+            <h1>Hello</h1>
+            <h2>Hellooo</h2>
+        </div>
+      );
+
+
+Any OTHER WAY to call FUNCTIONAL COMPONENT :::::
+- YESSSSSSSSSSSSSSSSSs
+
+    Instead of <Title/>, you can do   
+
+            {Title()}    => Perfectly Valid 
+
+
+    Important -  Cause at the end it is a JAVASCRIPT Function
+                  YES, BUT YOU CAN't WRITE {Title}, cause you have to execute it using Parenthesis (),
+                  cause functions are NOT VALID REACT CHILD, so execute it
+
+
+NOTE-  <Title /> (is a functional component)
+       
+       //  This is called COMPONENT COMPOSITION not FUNCTIONAL COMPOSITION
+
+      ***COMPONENT COMPOSITION - Calling a component inside another component
+
+          --> Also called COMPOSING COMPONENTS
+
+
+
+MIND BOGGLING THING IS HERE:
+
+      ************
+      Inside a JSX EXPRESSION , you can write ANYYYYYYYYYY JS CODE inside { }
+
+      - even a console.log()
+      - or a variable name let's say x
+      - can do calculations 1+2
+      - a function like function_name()
+
+*** yes inside { }, you can execute javascript
+
+
+
+
+- ONE MORE COOL THING ABOUT JSX  (NOBODY TELLS YOU THIS )
+
+  Suppose you are fetching data from API
+
+  const data= api.getData();
+
+        and an hacker has injected malicious code inside API
+        and you put this in our functional component
+
+  {data} //suppose this is in Functional Component in Middle of JSX Expression
+
+  and our server executes this,
+
+
+  What kind of attack is it called - XSS( Cross Site Scripting)
+  Hacker can get cookies, passowords, IP, Address, Location etc.
+
+
+- WHAT IS THE POINT of this whole thing explaining ???
+
+-- JSX is very secure , don't worry ,it makes sure your app is safe
+   from outside access . It does SANITIZATION
+
+        Read about it
+
+  JSX opppppppppppppppp
+
+
+
+
+
+
+HOMEWORK-
+
+1. Read About Keys in React (React Reconcilation) and Diffing algorithm
+
+2. How to write class names in JSX 
+3. Differnet uses of JSX
+4. How do you create an Image tag in in JSX and other tags too(there is a Slight Difference)
+
+
+
+
+Question - Will JSX run without parcel since babel is in parcel dependency
+Ans - Noo , IT won't
+     Use Babel package separately, it will work
+
+     Means your program needs Babel to execute JSX whether from 
+     - NPM
+     - Parcel TD 
+     - Webpack TD
+     - Vite TD
+
+     TD= Transitive Dependency
+
+
+Question - Is the Component Hoisted ?
+Answer- It behaves the same way as JS Function
+
+
+Question - If I can render React Element , Why need Functional Component?
+Answer - Get ans in future. Hint- to pass props to another functional component
+
+
+Question- Will this root.render(HeaderComponent()) work ?
+Answer- Yes
+
+
+Also note - babel does not remove console log by default 
+
+
+
+
+
+
+
+
