@@ -1,0 +1,106 @@
+// Object Destructuring and Spread Operator and using Real Database and Props and map function
+
+We have used the database of the swiggy using the network section which comes after the inspect
+=> Open swiggy.com
+    Right-Click and then click on inspect and then on network and then on "Fetch/XHR" and then 
+    press "CTRL + R" to reload and then you will see few files .. open "v5?lat....." file using the 
+    JSON Viewer and now you can locate the restaurents real database an use it for free
+
+// This is for educational purpose only .. do not misuse
+
+suppose the database is like 
+
+const restaurents=[
+    ...
+] // array of objects where each object have all it's information inside info property
+
+
+*** We will come back to everything after looking at each topic:
+
+1. Object Destructuring:-
+    visit here :- https://javascript.info/destructuring-assignment
+
+2. Javascript Map function:-
+   
+    The arr.map method is one of the most useful and often used.
+    It calls the function for each element of the array and returns the array of results.
+    The syntax is:
+
+      let result = arr.map(function(item, index, array) {
+        // returns the new value instead of item
+      });
+
+    For instance, here we transform each element into its length:
+
+    let lengths = ["Bilbo", "Gandalf", "Nazgul"].map(item => item.length);
+       alert(lengths); // 5,7,6
+
+CODE: 
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+const ImageElement = <img className="logo" alt="My Restaurent Photo" src="http://tinyurl.com/5n6ue4c4"></img>;
+
+//see database in code section 
+
+
+const HeaderComponent = () => {
+    return (
+        <div className="header">
+            {ImageElement}
+            <div className="nav-items">
+                <ul>
+                    <li>Home</li>
+                    <li>Contact Us</li>
+                    <li>Refer</li>
+                    <li>Cart</li>
+                </ul>
+            </div>
+        </div>
+    );
+
+};
+
+const Card=({name,cloudinaryImageId,avgRating,cuisines})=>{
+  return(
+    <div className='card'>
+    <img alt="Card Photo" src={"https://media-assets.swiggy.com/swiggy/image/upload/"+cloudinaryImageId}/>
+    <h2>{name}</h2>
+    <h5>Cuisines: {cuisines.join(",")}</h5>
+    <h3>{"Rating: "+ avgRating}</h3>
+    </div>
+  );
+};
+const Body=()=>{
+    return (
+      <div class="restaurant-list">
+        {
+            restaurants.map(restra=>{
+             return <Card {...restra.info}/>
+            }  
+          )
+        }
+      </div>  
+    );
+};
+const Footer=()=>{
+    return(
+        <h3>This is the Footer </h3>
+    )
+}
+
+
+
+const AppLayout = () => {
+    return (
+    <>
+    <HeaderComponent />
+    <Body/>
+    <Footer/>
+    </>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<AppLayout />);
