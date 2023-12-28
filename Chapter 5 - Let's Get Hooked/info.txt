@@ -1,0 +1,326 @@
+//Structuring an App
+
+When your app have 100s of files then you need to 
+structure it for better manageability and readability
+
+use a 'src' folder for storing your all files
+
+*** Well there is no restriction that you must structure
+your project .. but it is popular among devs
+
+For ex- Organize by features/routes
+
+
+EXPORTING Components from a files
+There are two ways of EXPORTING
+1. Default Export 
+2. Named Export
+
+1. Default Export
+
+Header.js
+
+    const Title=()=>(
+        //something
+    );
+
+    export default Title;
+
+How to Import it 
+
+import Title from "./components/Header"
+
+also,
+import Title from "./components/Header.js" - Fine
+
+IT WILL WORK
+
+
+What if I do this in Header.js
+
+const Title=()=>(
+    //something
+);
+
+const Header=()=>{
+    //something
+}
+
+What if I need to export both of them using Default?
+=> NOOOO
+
+I can export default one thing
+
+We can use the 2. Named Import
+
+In Header.js
+
+export const Title=()=>(
+    //something
+); 
+
+//add this 'export' in front of name of component
+
+const Header=()=>{
+    //something
+}
+
+export default Header;
+
+
+in App.js 
+
+//Default Import
+import Header from "./components/Header"
+
+//Named Import
+import {Title} from "./components/Header"
+
+
+Question - When to use which ?
+  Will get to know in future
+
+
+//Remember this thing
+
+Question - Is {Title} an Object Destructuring ?
+Ans- NOOOO
+     it just looks like that.
+
+     import obj from "./components/Header"
+     const {Title}=obj;
+
+     this above code is invalid.
+
+Valid:-
+
+import * as Obj from "./components/Header"
+Now we can use "<Obj.Title/>"
+
+This above code is perfectly valid.
+ANd can be related to the dot in React.Fragment
+
+Moving on :-
+
+*** First way :- All Named Export
+
+In Header.js
+
+export const Title=()=>{}
+export const Header=()=>{}
+
+In App.js
+
+import {Title,Header} from "./components/Header";
+
+
+
+*** Second Way :- When you have a Default Export
+
+In Header.js
+
+export const Title=()=>{}
+const Header=()=>{}
+export default Header;
+
+
+In Appp.js
+import Header,{Title} from "./components/Header";
+
+//This will work flawlessly
+
+Question - Does the name should be matched (while importing)
+        with the name written in export of another file?
+
+Answer - NOOOO, we can rename it too 
+But the good practice is to keep the name same.
+
+
+Question - Why not use jsx ?
+Answer - you can use this too, no problem
+         But sometime it breaks when you use external libraries.
+
+
+*** Use Default Import whenever possible as the code looks clean
+
+
+//MOVING on
+
+Importance of config.js / constant.js file
+
+This file can be used to store all the HardCoded data
+in our project 
+
+Example= swiggy URL before cloudnaryImageId
+Why?
+What if I need this URL somewhere else too
+Also the Database
+
+//Refactor all the code
+
+//Implementing the search functionality
+So inside Body.js I did this
+<div className="search-container">
+    <input type="text" className="search-input"
+     placeholder="search" value=""/>
+    <button className="search-btn">Search</button>
+</div>
+
+there is other card div also grouped them all with <></>
+
+So now if you go in the browser you won't be able to type
+anything in the search bar (cause we are using React)(HTML allows it)
+But the document is changing you can see that using onChange attribute
+
+const searchTxt="KFC";
+
+<input type="text" className="search-input"
+     placeholder="search" value="{searchTxt}"
+     onChange={(e)=>console.log(e.target.value)}/>
+
+Now you can see every key you type in console.
+like if you type "a", "b" etc you get 
+
+KFCa
+KFCb  
+
+
+*** React uses ONE-WAY Data Binding.. What is that??
+- Suppose you have a variable (hardCoded String) and you
+  have assigned it to a value={searchTxt} in your search bar.
+
+  Probelm is that - It won't change it's value when I am typing
+  in the search bar. Even I can't type directly
+
+  onChange={(e)=>console.log(e.target.value)}
+  //as we can see we get output in console only
+
+  Why not in the Search Bar itself ????????
+  Ans- whenever you write anything inside the search bar
+  React re-renders the component but the value is always that
+  HardCoded String(if assigned).
+
+okk will this work ??
+
+<input type="text" className="search-input"
+     placeholder="search" value="{searchTxt}"
+     onChange={(e)=>{searchTxt=e.target.value;}}/>
+
+Answer- NOOOOOOOOOO
+
+cause I need to maintain the variable which changes.
+We can utilize the above code if we are using this(searchTxt) somewhere else
+in the code.. But not inside it's setter itself.
+
+
+If you need to maintain a variable that changes itself
+then you need to maintain a variable that is a React kind of
+a variable.
+
+What is a React variable ??
+Ans- state variable 
+Every component in React maintains a state. So you can put all the
+variables onto/into that state.
+And everytime you need to create some local Variables(Hardcded string in our case)
+you use state inside React.
+
+I will create the state variables using the 'useState' Hook
+
+**Question - Where does this come from ??
+
+- React Library
+- import {useState} from "react";
+- Notice that the above line is Named Import and this hooks are
+  written by Facebook Developers
+
+Question - What is Hook ?
+- AT the end of the day, Hook is just a normal JS function
+- Every hook has a specific function/task/purpose for it.
+- There are many kind of Hooks available in React
+
+Question - What is State ? 
+
+
+Question - What is useState ?
+- It is a Hook and there are many other hooks available too
+- useState - for creating local state Variables.
+
+
+
+Question- What is a State Variable?
+
+
+
+//Creating a Local State Variable
+
+const [searchTxt]=useState();
+
+this useState() returns an array. The first element of this
+array is a variable name,second item is a function
+
+
+//Still looks confusing ?? Expand it
+    okayyyy..
+
+    -Normal Local variable 
+      const searchTxt="KFC";
+
+    -Local State Variable(with same value).
+      const [searchTxt]=useState("KFC");
+
+Now Now.. React says that you can not modify local state
+variable directly like this
+    onChange={(e)=>{searchTxt=e.target.value;}}
+
+React says that .. I CAN ONLY MODIFY THIS USING A FUNCTION ..
+
+- useState gives us that function
+- const [searchTxt,setSearchTxt]=useState();
+
+Note:- try to write function name using the set Keyword
+.. It is a good naming convention for state fucntions.
+Although we can name the function anything
+.. It is just the industry standard
+
+.
+.
+.
+value={searchTxt}
+onChange={(e)=>{
+    setSearchTxt(e.target.value);
+}}
+
+
+<h1>{searchTxt}</h1>
+Now whatever you write inside the search box it will be stored inside
+searchTxt simultaneously .. i.e Two Way Binding Reading and writing search text.
+
+okkkkkkkkkkkkkkkk..........
+
+const [searchTxt,setSearchTxt]=useState();
+Ques - Why it is an array ???
+- It's just the React convention. It could have been an object too if FB devs wanted it.
+
+
+Need of State Variables ?
+- Whenever a variable changes 
+  let constant =10;
+
+  and somebody(function) updated my constant.
+  React would not know that I have to change it in UI.
+  React has no idea .. what is happening to all your variables or what 
+  variable you created.
+  React can't keep track of these variables.
+
+If my constant updated to 11 if I press a button
+React won't re-render it .
+
+*******
+If you want your variables to be in sync with the UI, You need to use your state variables.
+
+Then the react will watch over it and if it gets changed , it will re-render my component
+
+
+MOVING ONNNNN
+
+Added Search functionality using Hooks and creating local state variables using useState
