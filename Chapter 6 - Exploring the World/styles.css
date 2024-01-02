@@ -19,7 +19,7 @@
 .card {
     border: 2px solid black;
     width: 200px;
-
+    height: 390px;
     padding: 10px;
     margin: 10px;
     border-radius: 5%;
@@ -35,4 +35,18 @@
 
 .search-container {
     margin-top: 10px;
+}
+
+.shimmer-list{
+    display: flex;
+    flex-wrap: wrap;
+}
+.shimmer-card{
+    
+    width: 200px;
+    height: 400px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5%;
+    background-color: lightgrey;
 }

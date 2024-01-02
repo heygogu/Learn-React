@@ -1,0 +1,162 @@
+Problem is that when we filter the restaurants then we are updating the
+UI.. In this scenario we can not revert back or in other words you can say
+that I can't research again in the original data. I can search in
+filtered data only.
+So we can use External APIs
+
+Before that, 
+Let's keep the React aside
+
+Let's look at an important industry concept which is known as MicroServices.
+Do you think that in large projects, only one react project is there
+Well it is not Possible. There are 100s of microservices in a big project
+
+*** What is a MicroService ??
+In old times , there used to be a single big project,
+Those apps used to have everything in it.
+Like sms sent from this project only
+notification from same apps
+UI was written in same project.
+If I have to change a single button , I need to redeploy all the code after 
+doing the changes in whole code .
+It used to be such a mess. This was called MONOLITH ARCHITECTURE
+
+But today the world is moving towards microservice ARCHITECTURE
+
+
+Instead of one project, we have small-small projects like
+1. UI Project * 5/10 etc
+2. Backend Project/ APIs Project
+3. Notifications Project
+4. Logs Project
+5. Authentication Project
+
+And every project can run on different ports.
+Databases have replicas i.e not a single source
+
+Advantages of Microservices:-
+1. Easier to Test
+2. Easy to Maintain
+3. Whole project can be written in Different Tech Stacks
+
+
+We are basically building a UI microservice right now
+
+How these all projects are connected??
+Suppose
+
+swiggy.com:3000 =>(mapped with) /
+swiggy.com:4000 => /dapi
+swiggy.com:5000 => /notifications
+
+all these projects deployed in different ports but same domain name
+
+Some Firms also change the domain name..
+
+
+OKkkkkkkkkkkkkkkkkkkkk
+
+Now from our UI microservice we will explore the world(other related microservices)
+
+We will use the fetch() method to call the API for Databases
+
+Two ways to fetch data from API
+
+1. User Loads Page => Call API =>render Page 
+2. User Loads Page => render Page =>Call API=>re-render(update) page
+
+2nd way is better
+React provides this functionality using useEffect Hook
+(render something quickly and keep updating it after API call is done).
+
+
+ How to use the useEffect Hook
+ It will come from react library too.
+
+ import {useEffect,useState} from 'react';
+
+ useEffect is a funtion which requires a callback function in it.
+ Read about callback functions .
+
+ useEffect(()=>{
+
+ })
+
+ //this callback will not be called immediately but whenever useEffect wants to call it
+ //React make sure about that time.
+// Wehenever our component re-renders (when state or props changes), the useEffect will be called
+*** But we don't want to call it after every re-render (VVVVVVVIIII)
+
+** So for handling that, pass a "dependency array" with it
+
+useEffect(()=>{
+
+ },[]);
+
+ i.e useEffect have two parameters 1.Callback, 2. Dependency array
+
+********* Dependency Array is to stop calling callback on every render
+
+
+useEffect(()=>{
+    console.log("Call when dependency is changed);
+ },[searchTxt]);
+
+ // now my callback will be called whenever my searchTxt Changes, i.e= once after initial render + everytime after re-render when the SearchTxt Changes 
+
+ What if I provide a empty dependency array??
+ then it will be called once and only once on a initial reload. (*** (V.V.V.I )It is called after component renders)
+
+
+*** Anything you need to do on some dependency/change of a state variable , you use useEffect.
+
+************************
+It means I should make an API call in useState() as it's callback
+executes after the component is rendered.(2nd way of API call).
+
+2. User Loads Page => render Page =>Call API=>re-render(update) page
+
+useEffect(()=>{
+
+    //API Call
+
+ },[]); 
+
+ Well well well .. we can not directly call swiggy's API, the browser
+ will block us from it. from localhost to swiggy can not happen
+ To modify this we have a plugin(extension)
+
+ *** Allow CORS:Access-Control-Allow-origin 
+
+ add this using chrome web store
+
+ What is CORS ??
+ Watch Akshay saini video
+
+ Well it was a public swiggy API, so we were able to call it.
+ We can not call their private APIs
+
+
+I have called the api uing fetch rather than the hard coded Data.
+and remove RestaurentsList from restaurents useState Hook
+
+ const [restaurants,setRestaurants]=useState([]);
+
+ Why pass an empty array and not just emptycause we are using 
+ map down the line.
+
+ But now our UI will become Bad as we see blank page until api gets the data.
+
+ See swiggy before the data loads .. shimmer UI is there
+ blank visual boxes.
+
+ Earlier websites used to have spinning loaders.. which has evolved 
+ cause shimmering effect is too better for our mind
+
+Shimmer UI - A UI resembles actual UI (grey boxes)
+//homework
+How to you render this type of UI if the data is not rendered.
+
+using CONDITIONAL RENDERING 
+if restaurents is empty - shimmer UI
+if restaurants is available - actual data UI
