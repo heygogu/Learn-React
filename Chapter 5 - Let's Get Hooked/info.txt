@@ -1,12 +1,11 @@
 //Structuring an App
 
-When your app have 100s of files then you need to 
-structure it for better manageability and readability
+When your app have 100s of files then you need to structure it for better manageability and readability
 
-use a 'src' folder for storing your all files
+Use a 'src' folder for storing your all files
 
-*** Well there is no restriction that you must structure
-your project .. but it is popular among devs
+*** Well there is no restriction that you must structure your project .. but it is popular among 
+devs
 
 For ex- Organize by features/routes
 
@@ -16,7 +15,7 @@ There are two ways of EXPORTING
 1. Default Export 
 2. Named Export
 
-1. Default Export
+*** 1. Default Export
 
 Header.js
 
@@ -31,7 +30,7 @@ How to Import it
 import Title from "./components/Header"
 
 also,
-import Title from "./components/Header.js" - Fine
+import Title from "./components/Header.js" - Works Fine
 
 IT WILL WORK
 
@@ -49,9 +48,11 @@ const Header=()=>{
 What if I need to export both of them using Default?
 => NOOOO
 
-I can export default one thing
+I can export default only one thing
 
-We can use the 2. Named Import
+We can use the 
+
+*** 2. Named Import
 
 In Header.js
 
@@ -92,7 +93,7 @@ Ans- NOOOO
 
      this above code is invalid.
 
-Valid:-
+Below code can be Valid:-
 
 import * as Obj from "./components/Header"
 Now we can use "<Obj.Title/>"
@@ -132,11 +133,10 @@ import Header,{Title} from "./components/Header";
 Question - Does the name should be matched (while importing)
         with the name written in export of another file?
 
-Answer - NOOOO, we can rename it too 
-But the good practice is to keep the name same.
+Answer - NOOOO, we can rename it too, But the good practice is to keep the name same.
 
 
-Question - Why not use jsx ?
+Question - Why not use .jsx ?
 Answer - you can use this too, no problem
          But sometime it breaks when you use external libraries.
 
@@ -148,8 +148,7 @@ Answer - you can use this too, no problem
 
 Importance of config.js / constant.js file
 
-This file can be used to store all the HardCoded data
-in our project 
+This file can be used to store all the HardCoded data in our project 
 
 Example= swiggy URL before cloudnaryImageId
 Why?
@@ -190,7 +189,7 @@ KFCb
   have assigned it to a value={searchTxt} in your search bar.
 
   Probelm is that - It won't change it's value when I am typing
-  in the search bar. Even I can't type directly
+  in the search bar. 
 
   onChange={(e)=>console.log(e.target.value)}
   //as we can see we get output in console only
@@ -213,9 +212,8 @@ We can utilize the above code if we are using this(searchTxt) somewhere else
 in the code.. But not inside it's setter itself.
 
 
-If you need to maintain a variable that changes itself
-then you need to maintain a variable that is a React kind of
-a variable.
+If you need to maintain a variable that changes itself then you need to maintain a variable,
+that is a React kind of a variable.
 
 What is a React variable ??
 Ans- state variable 
