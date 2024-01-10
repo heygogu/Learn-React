@@ -142,7 +142,7 @@ and remove RestaurentsList from restaurents useState Hook
 
  const [restaurants,setRestaurants]=useState([]);
 
- Why pass an empty array and not just emptycause we are using 
+ Why pass an empty array and not just empty ,cause we are using 
  map down the line.
 
  But now our UI will become Bad as we see blank page until api gets the data.
