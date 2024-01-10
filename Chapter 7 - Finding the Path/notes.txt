@@ -1,0 +1,206 @@
+1. React says that you should never make a functional component
+    inside a functional component. Keep it at the top level
+
+    WHYY??
+    Cause if the outer component is rendering then the inner component will also
+    created the amount of time the outer component renders.
+
+    Well you can call it inside like we have done
+
+
+2. Never ever write the useState hook inside if-else statement
+    React won't exactly know whether there will be searchText
+    (local state variable of the useState currently) or not
+    React likes concrete things. You should exactly know what variables React needs to track
+
+    By write I mean declare the Hook
+     
+3. Never write the useState hook inside a for loop??
+   Again React doesn't like inconsistency..
+   - It should exactly know how many local state variables are there.
+
+Let's see the purpose of useState() hook
+- useState() hook is there to create the local state variable inside 
+  your functional component , so never use useState outside your functional component.
+
+  Also , create your functions outside component.. I did this mistake with filterData
+  function but in this Chapter I have corrected myself .
+
+
+Can I use more than 1 useEffect()??
+-- YES we can use 
+
+
+How to import my local images in my project ?
+In src project
+  create a folder 'assets'->'img' folder
+  and store images in img folder.
+
+  How to import ?
+  import Logo from '../assets/img/logo.webpg'
+
+  and now you can use it in front of a src attribute in img tag
+  like src={Logo}
+
+
+
+- Generally when we are building an app, images come from CDN
+  Why CDN is a great place to host your images
+  - 100% uptime
+  - caches our images
+  - optimizes images 
+  - In CDN, we can not optimize our images after theye are on our 
+    browser, so we put optimized images on CDN.
+
+  READ ABOUT IT
+
+
+- Should I have used shimmerEffect using react-shimmer package??
+  Nooo, we can create on our own, I used CSS.
+
+  For everything we should not import package. 
+
+- When should we import a big package
+  when the things get complex.
+
+  Like for building large forms , we can use formik package
+
+
+In this Chapter - we will use routing using React Router package
+  routing like /home, /aboutus , /contactus 
+  and we will find the paths in our app
+
+npm install react-router-dom
+
+
+// We will build our about, contact us pages
+
+For these , we need to have a routing configuration
+
+//create an about component;
+
+import {createBrowserRouter} from "react-router-dom"
+
+while creating a route , createBrowserRouter takes some configuration
+
+const appRouter=createBrowserRouter([
+  //if /about in my page what should I do , that am defining here
+  {
+    path:"/",
+    element:<AppLayout/>,
+  },
+  {
+    //before this import About in App.js file where you are writing this code
+    path:"/about",
+    element:<About/>,
+  }
+])
+
+// each path is an object
+//always create this below AppLayout component
+
+//Now we need to provide this appRouter to our app
+
+import {createBrowserRouter,RouterProvider} from "react-router-dom"
+
+root.render(<RouterProvider router={appRouter}/>);
+
+Now root will render according to this configuration
+
+And now you can go into different routers
+//what if I try to go to unknown route
+- React-Router-DOM will give me a good looking error rather than some red text.
+  i.e It provides a great user page and our console won't break
+
+How to add our custom errors
+
+Make an error component and import it in App.js
+{
+    path:"/",
+    element:<AppLayout/>,
+    errorElement:<Error/>,
+}
+
+Now we can handle any undefined route by rendering Error component in web page
+if the route name is not known by our program.
+But this will handle route errors like
+/dfsdg
+/dfjshg
+/khkj
+
+What if /about/dbfhbsdh
+
+-- about exists in our page
+Will the Error component load ?? => YESSSSS
+
+But what if I want to show some more info about the error
+For that react-router-dom provides us a HOOK..which gives us a error object
+
+
+Go to error component and 
+
+import {useRouteError} from "react-router-dom";
+
+inside Error component and before return
+ const err=useRouteError();
+
+Now you can use this err object however you want inside return
+It will look something like this
+
+
+import {useRouteError} from "react-router-dom";
+const Error=()=>{
+    const err=useRouteError();
+    console.log(err);
+    return(
+        <div>
+            <h1>Oops !!</h1>
+            <h2>Something went wrong !!</h2>
+            <h3>{err.status+" "+err.statusText}</h3>
+        </div>
+    )
+}
+export default Error;
+
+Now we are going to develop a SPA=> SIngle Page Application
+and I won't want my page to complete rerender when am going to different route
+I want the highlighted content like navbar to remain the same for all routers
+
+(not using anchor tags)
+
+Types of Routing-
+1. Client Side => Without network calls cause the components are local while calling
+
+2. Server Side => With network calls
+
+For this Client Side Routing which we gonna do
+
+the "react-router-dom" provides us something called "Link"
+which works exactly like anchor tag
+
+In Header.js
+
+import {Link} from "react-router-dom"
+
+using anchor tags
+- <a href="/about"><li>About</li></a>
+
+a replaced by Link ,
+href replaced by 'to'
+
+using Link 
+- <Link to="/about"><li>About</li></Link>
+ 
+
+
+*** anchor reloads the page or say re-render and take time
+*** Link doesn't re-render or reload , you get quick results
+
+What is Link Tag ?
+Remix Developers who built it (also developed react-router-dom)
+
+This Link tag gets converted into anchor only while rendering,
+means at the end of the day it is anchor tag
+
+Why use Link then?
+cause "react-router-dom" is keeping a track of links created using Link 
