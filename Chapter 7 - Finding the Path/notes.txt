@@ -204,3 +204,72 @@ means at the end of the day it is anchor tag
 
 Why use Link then?
 cause "react-router-dom" is keeping a track of links created using Link 
+
+
+
+//Nested Routing
+Our header and footer are gone if I go another page ..
+But I want them to be intact
+Means I want to render my About between <Header/> and <Footer/>
+
+So I need to make the <About/> a children of my <AppLayout/> route
+
+const appRouter=createBrowserRouter([
+    {
+        path:"/",
+        element:<AppLayout/>,
+        errorElement:<Error/>,
+        
+        children:[
+           { 
+            path:"/about",
+            element:<About/>,
+           }
+        ]
+    },
+    
+])
+
+Now for the next step we need Outlet component from "react-router-dom"
+
+import {createBrowserRouter,RouterProvider,Outlet} from "react-router-dom"
+
+
+const AppLayout = () => {
+    return (
+    <>
+    <Header />
+    <Outlet/>  //and I want my header and footer to be always there
+    <Footer/>
+    </>
+    );
+};
+
+
+*** All the children will go into the Outlet according to the route
+
+Now this will work but but but
+If you see the root we render AppLayout which doesn't have a body now
+SO I have to pass Body as a children too.
+
+const appRouter=createBrowserRouter([
+    {
+        path:"/",
+        element:<AppLayout/>,
+        errorElement:<Error/>,
+        
+        children:[
+            { 
+              path:"/",
+              element:<Body/>,
+            },
+           { 
+            path:"/about",
+            element:<About/>,
+           }
+        ]
+    },
+    
+])
+
+Now if you render, You get the desired output and also Link is doing its work

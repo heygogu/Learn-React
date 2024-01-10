@@ -1,5 +1,6 @@
 import Logo from '../assets/img/photo.webp'
 import { useState } from 'react';
+import {Link} from 'react-router-dom';
 
 const Title=()=>{
     return (
@@ -15,9 +16,9 @@ const Header = () => {
             <div className="nav-items">
                 <ul>
                     <li>Home</li>
-                    <li>Contact Us</li>
-                    <li>Refer</li>
-                    <li>Cart</li>
+                    <li><Link to={"/contact"}>Contact Us</Link></li>
+                    <li><Link to={"/about"}>About Us</Link></li>
+                    <li>Contact</li>
                     <li>
                         {isLoggedIn ? (
                             <button onClick={() => setIsLoggedIn(false)}>Logout</button>
