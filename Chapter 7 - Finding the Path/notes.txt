@@ -273,3 +273,11 @@ const appRouter=createBrowserRouter([
 ])
 
 Now if you render, You get the desired output and also Link is doing its work
+
+
+Dynamic Routing:-
+Implemented using useParams hook in react-router-dom
+
+Used another api of swiggy for restaurant specific data in ResraurantMenu component
+
+Watch code in Body component while we are rendering 

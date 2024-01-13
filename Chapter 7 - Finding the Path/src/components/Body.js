@@ -1,7 +1,7 @@
 import { Card } from './Card';
-import { ImageElement } from '../App';
 import { useState, useEffect } from 'react';
 import Shimmer from './Shimmer';
+import { Link } from 'react-router-dom';
 
 
 
@@ -67,7 +67,7 @@ const Body = () => {
                     <h1>Searched item is not available</h1>
                 ) : (
                     filteredRestaurants?.map((restra) => {
-                        return <Card {...restra.info} />;
+                        return <Link to={"/restaurant/"+restra.info.id} key={restra.info.id}><Card {...restra.info} /></Link>;
                     })
                 )}
             </div>
