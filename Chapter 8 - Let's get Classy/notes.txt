@@ -1,0 +1,605 @@
+//Class Based Components
+When React started there was a concept of class based components.
+Hooks/functional components have recently started coming in.
+
+Class Based components are important for interviews
+But they are no longer used in modern projects as we can do almost everything using
+functional based components.
+
+
+Recap
+React Router DOM have many kinds of routers.. most recommended is createBrowserRouter
+There are createHashRouter and createMemoryRouter.. Read about them
+
+Created Nested Routes:
+suppose I want localhost:1234/about/profile
+So I can do it using creating children of about
+
+{ 
+    path:"/about",
+    element:<About/>,
+    children:[{
+      path:"profile",  //don't do "/profile" cause react will consider it as localhost:1234/profile
+      element:<Component/>,
+    }]
+}
+
+/profile means from root i.e localhost:1234/profile
+that's why we did /about , we can also do "about" only
+
+Will it work now ??
+NOOOOOOOOOO
+
+cause Outlet should be created in parent which is About.js
+so go to About.js and import Outlet and add <Outlet/> somewhere
+
+What if I want to use Profile without the Outlet??
+What to do ?
+- directly import profile component and use it in about.js
+
+
+//MOVING TO CLASS BASED COMPONENTS
+converting Profile.js into class based in profileclass.js
+
+A class based component is a class at the end of the day
+And to tell React that what we are creating is a class based component
+and not a JS class, we use the extends keyword followed by React.Component
+
+***IMPORTANT
+We can not create a class Based component without a render method 
+This is the only mandatory method for class based components
+This render method returns some jsx 
+
+class Profile extends React.Component{
+
+    render(){
+        return <h1>Profile Class Component</h1>
+    }
+}
+export default Profile;
+
+Whatever you return, gets into the DOM. Just like functional components
+
+Now, this is not all .. there are many things left
+
+For now let us use both of them (class and function) in about.js to learn
+..using props with functional one .. It works
+But how to pass props to a class based component ??
+Is it same as functional - NOO.
+
+We get props in ProfileClass using this.props
+this is used frequently in class based components
+
+check out the code in profileclass
+
+React knows that whenever there is a prop or state change in my class I need to
+re render it.
+(Rendering term comes from class based components only as it had render method)
+props are attached to the this in class based components.
+
+How to create state in functional component- check Profile.js
+How to create a state in class based component??
+In class based component a class has a constructor..
+
+Homework-
+1. Why do we do super(props) after getting props in constructor
+2. Why React is passing props in constructor?
+
+ constructor(props){
+        super(props);
+  }
+
+React will complain if you don't write props and super(props) react will complain
+
+Why create constructor here?
+- as constructor is used for the initialization when component renders,
+so this becomes the best place to  create the state
+
+we create using this.state
+
+constructor(props){
+        super(props);
+        //creating state
+        this.state={
+            count:0,
+        };
+    }
+
+I also provided initial value ,observe the syntax.
+How to utilize it ? - this.state.count;
+
+In class based components , we need to create all state variables in single object (state or this.state)
+React uses one big state object to maintain all state variables. (in functional too doesn't matter that state variable are in different lines)
+
+
+How to set count in class based ?
+
+  <button onClick={()=>{
+      this.setState({
+          count:1,
+      })
+  }}>Click Class Count</button>
+
+  we use this.setState(), and we pass the modified object i.e count in {} , Now React will follow reconciliation
+
+  //We do not mutate state directly like this.state.count= something..
+
+  We observed that 
+  In class based components , we updated all state variables together by changing the state object directly, (can be done using multiple this.state too - which was a bad way)
+  But in functional based components we need sparate function for every state updation.
+
+  Which one is a good way ??
+  New or old ?? - New one is far better.
+  React is most popular because React made developers happy.
+
+  if I have count and count 2 in this.state={..} and I change values using 
+  this.setState({..}), I can change only count or count2 or both.. 
+  It was confusing for developers like how React is able to make changes in this.state={..} PARTIALLY (only count or count2 etc)
+
+  setCount in function based and setCount2 is very precise, so it's good
+
+  In class based components , a constructor is called very first, then render method executes *** vvimp
+  Try writing console log in constructor and in render and check the console in the browser 
+
+
+  One more thing- where did I call my API in functional component- using useEffect()
+  When useEffect is called ? - After every render (to make app fast, first render and update and render)
+
+  How things work in class based??
+  There is one more important method apart from constructor and render
+  which is known as "componentDidMount()"
+  It runs after the render (called after render);
+  
+  whenever a class based component is rendered on a page, it has some 
+  life cycle method which are called -( )
+  Sequence of methods called 
+  1. Constructor 
+  2. component renders (render method)
+  3. componentDidMount is called
+
+  so where should I make API call - componentDidMount obviously
+
+  There are more lifecycle methods .. we will study most important ones
+  //First convert about component into class based for practice and add a constructor and componentDidMount
+
+  Noww 
+
+
+**Code in ProfileClass.js
+
+import React from 'react';
+
+class Profile extends React.Component{
+    constructor(props){
+        super(props);
+
+        console.log("Child - Constructor")
+        this.state={
+            count:0, //1st state variable
+            count2:0,
+        };
+        
+    }
+    componentDidMount(){
+        
+        console.log("Child - componentDidMount");
+    }
+    render(){
+        console.log("Child - render");
+        return(
+            <div>
+                <h1>Profile Class Component</h1>
+                <h3>Name: {this.props.name}</h3>
+                <h3>Count: {this.state.count}</h3>
+                <button onClick={()=>{
+                    this.setState({
+                        count:1,
+                        count2:2,
+                    })
+                }}>Click Class Count</button>
+            </div>
+        );    
+    }
+}
+export default Profile;
+  
+
+
+Code in About.js (class based):
+
+import { Outlet } from "react-router-dom";
+import ProfileFunctionalComponent from "./Profile"
+import Profile from "./ProfileClass"
+import React from "react";
+class About extends React.Component{
+    
+    constructor(props){
+        super(props); 
+        conosle.log("Parent - constructor")
+    }
+
+    componentDidMount(){
+        console.log("Parent- componentDidMount")
+    }
+
+    render(){
+         console.log("Parent- Render")
+        return (
+            <div>
+                <h1>Rohit Kumar</h1>
+                <p>
+                    hjbknlmlbjgfsd djbvlksdnv 
+                </p> 
+                <Profile name={"Class related name"}/>
+            </div>
+        )
+    }
+}
+export default About;
+
+
+As Profile is embedded/called in About.js
+How will these 6 Lide cycle method of both called ?
+
+1. Parent Constructor
+2. Parent Render (initiate class lifecycle of Profile)
+3. Child Constructor
+4. Child Render
+5. Child componentDidMount
+6. Parent componentDidMount
+
+It was super important***
+
+
+What is the meaning of Mount ? - Loaded/Embedded.Attached
+
+
+Now comes the Hair Pulling Stuff
+What if there were two child in About.js
+
+Code in About.js (class based):
+
+import { Outlet } from "react-router-dom";
+import ProfileFunctionalComponent from "./Profile"
+import Profile from "./ProfileClass"
+import React from "react";
+class About extends React.Component{
+    
+    constructor(props){
+        super(props); 
+        conosle.log("Parent - constructor")
+    }
+
+    componentDidMount(){
+        console.log("Parent- componentDidMount")
+    }
+
+    render(){
+         console.log("Parent- Render")
+        return (
+            <div>
+                <h1>Rohit Kumar</h1>
+                <p>
+                    hjbknlmlbjgfsd djbvlksdnv 
+                </p> 
+                <Profile name={"First Child"}/>
+                <Profile name={"Second Child"}/>
+            </div>
+        )
+    }
+}
+export default About;
+
+
+**Code in ProfileClass.js
+
+import React from 'react';
+
+class Profile extends React.Component{
+    constructor(props){
+        super(props);
+
+        console.log(" Constructor"+this.props.name)
+        this.state={
+            count:0, //1st state variable
+            count2:0,
+        };
+        
+    }
+    componentDidMount(){
+        
+        console.log("componentDidMount" + this.props.name);
+    }
+    render(){
+        console.log("render"+this.props.name);
+        return(
+            <div>
+                <h1>Profile Class Component</h1>
+                <h3>Name: {this.props.name}</h3>
+                <h3>Count: {this.state.count}</h3>
+                <button onClick={()=>{
+                    this.setState({
+                        count:1,
+                        count2:2,
+                    })
+                }}>Click Class Count</button>
+            </div>
+        );    
+    }
+}
+export default Profile;
+  
+
+How will be the life cycle methods will be called ?
+
+
+Like This ??
+1.Parent Constructor
+2.Parent Render
+3.First Child Constructor
+4.First Child Render
+5.First Child componentDidMount
+6.Second Child Constructor
+7.Second Child Render
+8.Second Child componentDidMount
+9.Parent componentDidMount
+
+NOOOOOOOOOOOOOOOOOOOOO
+
+
+***********************************************
+
+Correct Sequence is
+
+1.Parent Constructor
+2.Parent Render
+3.First Child Constructor
+4.First Child Render
+5.Second Child Constructor
+6.Second Child Render
+7.First child componentDidMount
+8.Second Child componentDidMount
+9.Parent componentDidMount
+
+
+
+Whyyyyyyyyyyyyyyy ???
+***********  VVVVVVVIMPP
+***
+Refer to diagram in assets/images/image.png == focus on mount PART
+When React is rendering things up - It does it in two phases .
+
+Reconciliation Phases::-
+
+1st Phase - Render Phase - constructor and render is called
+2nd Phase - Commit Phase - actual modification of DOM and componentDidMount is done after updation of DOM.
+
+And Render is Faster than commit as Commit deals with the DOM (heavy operation)
+So, for achieving more speed React Batches up the Children so that it can render both and then move on to the commmit phase.
+
+If React had followed the previous (non correct) sequence then before rendering second child
+It had done manipulation in DOM for first child (then componentDidMount for first) and then moved on to the second child which causes
+starvation for second child render. So React is smart and Batches up the render phase of both child. and then update DOM for both children
+together and process first mount and second mount 
+
+
+
+NOW COMING BACK TO API CALL in componentDidMount
+
+call fetch in Profile.js
+add async in front of componentDidMount as we are using await n all
+
+HOMEWORK NUMBER 2 - we can make componentDidMount an async function but not the callback of useEffect() in Body.js
+
+we used a userInfo object for receving github api data
+
+Now code in profileclass.js
+***
+import React from 'react';
+
+class Profile extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            userInfo:{
+                name:"Dummy Name",  //can keep it empty
+                location:"Dummy Location",
+            },
+        }
+        console.log('constructor');
+    }
+
+ async componentDidMount() {
+        // Best place for API calls
+        
+        const data = await fetch('https://api.github.com/users/heygogu');
+        const json = await data.json();
+        console.log(json);
+        this.setState({
+            userInfo:json,
+        })
+        console.log('consoleDidMount called');
+
+        
+    }
+    render() {
+        console.log('render class');
+        return (
+            <div>
+                <h1>Profile Class Component</h1>
+                <img src={this.state.userInfo.avatar_url} />
+                <h3>Name: {this.state.userInfo.name}</h3>
+                <h3>Location: {this.state.userInfo.location}</h3>
+                {/* <button
+                    onClick={() => {
+                        this.setState({
+                            count: 1,
+                            count2: 2,
+                        });
+                    }}>
+                    Click Class Count
+                </button> */}
+            </div>
+        );
+    }
+}
+export default Profile;
+
+
+***
+Code in About.js
+***
+Code in About.js (class based):
+
+import { Outlet } from "react-router-dom";
+import ProfileFunctionalComponent from "./Profile"
+import Profile from "./ProfileClass"
+import React from "react";
+class About extends React.Component{
+    constructor(props){
+        super(props); 
+        conosle.log("Parent - constructor")
+    }
+    componentDidMount(){
+        console.log("Parent- componentDidMount")
+    }
+    render(){
+         console.log("Parent- Render")
+        return (
+            <div>
+                <h1>Rohit Kumar</h1>
+                <p>
+                    hjbknlmlbjgfsd djbvlksdnv 
+                </p> 
+                <Profile name={"First Child"}/>
+            </div>
+        )
+    }
+}
+export default About;
+
+
+How will the lifecycle follow
+1. Parent Constructor
+2. Parent Render
+3. Child Constructor
+4. Child Render
+
+DOM is updated
+json is logged
+5. child componentDidMount (console.log)
+6. Parent componentDidMount
+
+Seems Natural no ?? ---> It will not be like this .. Whyyyyyyyy
+
+Initially React will render things for you 
+but later during commit phase , It recognizes that Child's componentDidMount is an async function (means it will take time to load)
+so for efficiency it should not wait 
+
+Correct Sequence
+1. Parent Constructor
+2. Parent Render
+3. Child Constructor
+4. Child Render-- 
+--DOM is updated
+   here as we are waiting so we couldn't get to console.log() of async componentDidMount
+   so meanwhile parent componentDidMount
+5. Parent componentDidMount
+
+6. child componentDidMount
+ 
+ API called and json is logged 
+ and state is also changed
+ and setState() triggers render again of Updating (refer diagram)
+so 
+7. Child Render again then DOM and trigger another method which is
+
+*** componentDidUpdate() ***
+
+
+***When we are calling API, component is already mounted.. we are just upating again using state
+This re-render cycle is known as Updating(Refer to diagram in assets)
+
+Now include componentDidUpdate() also in profile class.
+
+Now 8. Child componentDidUpdate (refer diagram again)
+
+
+componentDidMount runs after first Render
+componentDidUpdate after every subsequent render (update)
+
+This is done via useEffect() in functional component.
+
+
+last remaining in lifecycle in componentWillUnmount(){..}
+It is called when component is unmounted from DOM.
+When it unmounts ?
+- when you are on /about/profile and after 
+8th step child componentWillUnmount click on contacts and observe the console .. you will get it
+
+
+Important Disclaimer - Never compare React life cycle method to functional components.
+
+useEffect is not using componentDidMount behind the scenes .. Remember this
+
+ 
+ Okay what is the use of componentWillUnmount()?
+ It is called when we are kinda leaving the page.
+ Our restaurant app have 1 page (single page application) - we are changing the components
+ So there are things we need to clear when we kinda leave the page ..
+
+ What should we clear ??
+ Suppose I had setInterval in componentDidMount() for printing something every second.(no api in componentDidMount)
+
+ Now open browser and go to about and see console .. 
+ the content is printing every second but now if we leave the page by clicking home 
+ the interval will start again from scratch after componentWillUnmount.
+
+ This was not expected.. This is the disadvantage of Single Page Application.
+ If you go again to about now , interval will double .. very big problem
+
+ Because only components are changed while changing pages .. No reloading is happening
+ i.e Reconciliation
+
+ SPA got bad .. even if it was a good thing to have SPA.
+
+ AFter a while it will blow up the page.. performance loss.
+ This is the answer for why we use componentWillUnmount().
+ You can clear the interval here. 
+ How to refer it in componentWillUnmount()?
+
+ in componentDidMount---
+
+   do something like this
+
+   this.timer=setInterval(()=>{
+    console.log();
+   },1000);
+
+now in componentWillUnmount()--
+
+clearInterval(this.timer);
+ 
+What if I go back to about ??
+- interval will start again normally.
+
+
+And now .. what if there was a functional component?
+and we had setInterval in useState().. will it stop after switching pages??
+--> Nooo , It won't stop automatically and when you come back to about page , you will find the 
+count has become faster ..
+
+*** How to clean this in functional components ???
+--> return function in useEffect(). It is called when u are unmounting it
+
+useEffect(()=>{
+    setInterval(()=>{
+        console.log("Hello");
+    },1000);
+
+
+    return ()=>{
+
+    }
+},[])
+
