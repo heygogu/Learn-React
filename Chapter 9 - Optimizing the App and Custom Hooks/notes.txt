@@ -1,0 +1,201 @@
+Most important hooks are useState and useEffect. 
+We have also use useParams too. 
+Today we will see about custom hooks and much more
+
+When and Why and How to build hooks ?
+
+1. WHY ??
+- There are many cases
+  Reusability
+  Readibility
+  Separation of concerns - Maintainability
+
+Go to Body.js
+And look at function filterData - It is an utility
+What if other component might need to use this
+We can make a separate folder for utils and import it in body.js
+This makes our code more testable, maintainable(easy to debug).
+
+***Modularity means I have broken down components into meaningful pieces
+
+Let us create our own hook:
+ Look at RestaurantMenu.js - It tries to fetch data and then load the component.
+ So it is doing two jobs. Can we extract some logic from this component.
+ API call can be extracted.
+ So let us create a helper hook that will help us in showing restaurant details.
+ Let's create a new file for it .. and also remember to create a hook file starting with word "use".
+
+ Can create anywhere .. let's create it in utils
+ useRestaurant.js and create a arrow function in it.
+ What will it do ??
+ useRestaurants will fetch the restaurant data for us.
+
+ How to put the functionality/logic in it ?
+  Example
+  const restaurant=useRestaurant(resId);
+
+  And I get the Restaurant details from here , I don't care where the data is coming from
+  cause RestaurantMenu's only job is to display the Restaurant Menu.
+
+  - so we did it check out useRestaurant.js;
+
+  Now all logic in useRestaurant and it has it's own reconciliation now.
+  and when state changes in useRestaurant then reconciliation also happen
+  in the component utilizing this custom hook i.e. RestaurantMenu
+
+How can I make this better ?
+- export api URL of useRestaurant in constant.js/config.js.
+
+--> Now the code looks cleaner.
+
+ Here I knew which logic I should use to make custom hook.
+
+ Let's write a logic from scratch and convert it into a hook .. "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=30.7333148&lng=76.7794179&restaurantId=" 
+
+We will make online, offline feature.
+If user is offline , we will restrict user from clicking restaurant cards and show a message too
+
+Go to body.js
+and also , how will I get to know if user is online or offline- using window online/offline event
+
+Can't we have a hook which can deliver us that functionality ?? -- yes
+check out useOnline in utils
+
+and this is how the npm packages are built .. kinda 
+Make our own library to export a lot of useful hooks.
+
+.. Now to test I need to go offline.. but I should fake it rather than actually doing it
+
+How to fake it ?
+--> Chrome - dev tools(inspect) - network- click on no throttling beside disable cache
+Now our message will appear.. this is how offline dino game kicks in
+or a cutomized message after user goes offline.  
+
+ALso .. whenever you add an event listener , you need to clean it up 
+Why?- cause if we switch pages(go out of our component) , event listener is still there.
+
+
+IMPORTANT 
+while removing, I need to remove the listener using same function
+
+useEffect(()=>{
+            window.addEventListener("online",()=>{
+                setIsOnline(true);
+            });
+
+            window.addEventListener("offline",()=>{
+                setIsOnline(false);
+            });
+
+            return ()=>{
+               window.removeEventListener("online",()=>{
+                setIsOnline(true);
+               }) 
+            }
+    },[])
+
+This above code is not right because the function in add and remove are different not same , so we need to abstract it. 
+Check out the useOnline now with handleOnline/handleOffline function.
+
+We can use useOnline anywhere
+Now remove it from Body and use it beside Login button using icons.
+build hooks to check login status and for local storage
+
+
+*********
+*********
+Let us talk about parcel:
+How many js file parcel create for all our code/files -> 1;
+check in Network for js file.
+this file size is large during dev build and small for production build and parcel further compresses it.
+
+If our website have 100s of component , wouldn't the size of this one file become extremely large, which will make it slow.
+So it does not make sense to put all our component in one file.
+*** Large apps can not work if you just create One Bundle
+What should we do then ??? -> 
+
+  CHUNKING (there are also other names for this ..like ,
+   CODE SPLITTING,
+    DYNAMIC BUNDLING, 
+    LAZY LOADINGGGGGGG...)
+
+First day, bundling was good, now it is disadvantageous
+
+So, Is Bundling Good or Bad ?????
+-> It's good, to a LIMIT. We should make logical bundles and not bundle everything together in one file.
+A few line of code can make our prod. build's performance very high..
+
+Look at makemytrip.com .. people go there with intent of looking for a single thing, wither flight or bus or train etc.
+Is it a good idea to load component of all those options at once ??
+-> No, cause there is no need
+
+In large scale apps we build different chunks/ bundles based on the USE CASES.
+It's on the developer that how they design the system. REMEMBER THIS.
+
+on makemytrip, on the initial rendering it shows only flight related components,
+unless I click train or bus , it won't load their components. Means when I click on train it renders train bundle.
+when I click on Bus , it loads Bus related bundle.. 
+it is also called as ** ON DEMAND LOADING / DYNAMIC IMPORT.
+
+
+What Bundle should we create ?? 
+Suppose we have Instamart component having many component inside it
+Add it to header and also to path.
+
+Now let us do CHUNKING.
+Where do you do chunking - wherever you have route , wherever we have import of instamart i.e App.js in out case
+
+
+Remove import statement and do it like this (check out App.js)
+we have something called lazy, comes from react library as a named export. 
+and this lazy takes a function and now we will do the dynamic/lazy import
+
+***
+
+const Instamart=lazy(()=>import("./components/Instamart"));
+
+Now check the network tab when you click on the instamart in header. 
+We will get a new bundle file for it .
+
+There is a problem .. when we load instamart it takes some time to load it .. so initially it may throw an error.
+Because React tries to render something which is not there yet. So React suspends the rendering.
+
+*** When using DYNAMIC LOADING/ ON DEMAND LOADING , React Suspends loading .
+
+After sometime we can see the results and once we see it will not show error again cause the file is loaded once because it is an 
+SPA where pages are not reloading , just the components are changing.
+
+When I am clicking on it for the First time .. React suspends it ..
+How to handle it ??
+We use something known as "Suspense" come from react.
+It is a suspense what is going to come up, whether instamart will load or not.
+
+Wrap <Instamart/> inside suspense
+                path:"/instamart",
+                element:(
+                    <Suspense>
+                        <Instamart/>
+                    </Suspense>
+                ),
+
+Now React will take care of this in a different fashion, React will take care of this delay..
+i.e React will take care of this promise ... 
+
+import("./components/Instamart")  //this import is a promise.
+
+
+As React waits for the component to load during Suspence, what if it takes 2-3 seconds, what should we do till then ??
+We can show the SHIMMER UI.
+So React component takes a prop known as fallback and in this you can pass in whatever you need to show until instamart is available.
+
+                path:"/instamart",
+                element:(
+                    <Suspense fallback={<Shimmer/>}>
+                        <Instamart/>
+                    </Suspense>
+                ),
+
+
+fallback can have any jsx.
+
+NOTE:- There is no need for Chunking in small apps.
