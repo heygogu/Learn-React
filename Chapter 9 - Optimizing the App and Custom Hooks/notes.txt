@@ -186,7 +186,7 @@ import("./components/Instamart")  //this import is a promise.
 
 As React waits for the component to load during Suspence, what if it takes 2-3 seconds, what should we do till then ??
 We can show the SHIMMER UI.
-So React component takes a prop known as fallback and in this you can pass in whatever you need to show until instamart is available.
+So React component takes a prop known as "fallback" and in this you can pass in whatever you need to show until instamart is available.
 
                 path:"/instamart",
                 element:(
@@ -199,3 +199,7 @@ So React component takes a prop known as fallback and in this you can pass in wh
 fallback can have any jsx.
 
 NOTE:- There is no need for Chunking in small apps.
+
+IMPORTANT::=>
+***Never ever lazy load inside another component. Do it outside, cause it will be lazy loaded after every cycle/render.
+Do it under the imports directly.
