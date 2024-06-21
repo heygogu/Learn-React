@@ -1,0 +1,143 @@
+// Jo dikhta h vo Bikta hai
+Why should we not use native CSS ?
+In Frameworks , we can write optimized css, and it saves time.
+
+What is SCSS and SASS?
+-> Make the CSS writing experience good.
+How?
+Nesting,Reusability,Variables etc.
+SCSS is converted to CSS at the end of the day.
+
+Ways to include CSS in our project ?
+-> Normal
+-> SCSS
+-> Libraries like Material UI.
+-> styled-components.com - writing css inside javascript just like jsx(html like) in js
+
+Homework - Who maintains Material UI ?
+
+Material UI is a fully loaded component library.
+
+*** Pros of using a library-
+easy to use, built in components, consistent UI.
+
+What is better Material UI or Base UI or Ant UI ?
+-> All are similar, it just depends on developer needs. There are slight changes only.
+
+*** cons of using Libraries
+Bundle Size Increases, Less control on design,
+
+*** Tailwind CSS Framework 
+    It comes with a mix of things
+  -> CSS on the go(in the same file like inline css)
+  -> Reusability - comes with lot of prebuilt classes
+  -> Less Bundle Size (Not a full fledged framework)
+  -> Very Flexible UI can be created - customizable unlike Material,Base,Chakra etc
+  -> Best Documentation
+  ->can be used with normal html , css too
+
+How to integrate it with projects ? 
+-> can use CDN link
+
+Note -> Tailwind changes normal behaviour of tags.
+        try using CDN and refresh our project and observe the font
+
+** Tailwind wants to you to write CSS in it's own way. It won't let the normal behaviour continue.
+-> TW works only with class names.
+
+**                  class name
+For Bold Font =>    font-bold
+For Large Text =>   text-xl  text-2xl .... or text-lg    and for medium text-md
+For Small Text =>   text-sm 
+
+Search using Ctrl + K on tailwind docs
+
+Okay let's first use it as a package rather than as a cdn link
+
+Go to Installation and then Framework guide and then parcel 
+
+=>  npm install -D tailwindcss postcss
+
+What is postcss ? -> to compile class names
+
+Now do this
+=> npx tailwindcss init                  (npx is to execute directly)
+
+It will give us a tailwind.config.js file
+
+=>HOMEWORK=> Research about the initial content this file (open and see)
+
+There are three things 
+1. content
+2. theme
+3. plugins
+
+Let's discuss about the content rest is for the homework
+
+1. content=> It contains description of all type of files in which the tailwind will be used.
+            All our components obviously.. how to add all
+            There is a string available at Tailwind framework guide => parcel and follow along
+
+            "./src/**/*.{html,js,ts,jsx,tsx}"
+
+Why ? -> So that compiling of tailwind only goes through them rather than other files
+
+
+Now we need to configure postcss file (as mentioned in docs)
+create a .postcssrc file
+
+In index.css paste 3 lines mentioned in docs 
+->*** make sure to remove the existing css.
+
+@tailwind base; 
+@tailwind componenets; 
+@tailwind utilities; 
+
+What does these 3 files do ?
+It's way for tailwind to work.. this is how parcel get's to know about tailwind when it scans index.css
+
+Now setup is complete.
+
+Now everything look like sh*** in browser
+
+As I can't remember all the classes , so there comes an extension that will rescue us 
+Install "tailwind css intellisense"
+
+Now tailwind provides predefined sizes.
+What if we need exact size ?
+There is something known as Square Bracket Notation
+
+Nomrally for width w-3, w-4 but if I need exactly 200px then 
+w-[200px]     use this
+
+Parcel take help of postCSS and tailwindcss to compile and bring neccessary classes in our project 
+check in network tab. Only the classes we are using in our project will be shipped to the production
+
+What about dynamic classes ? like w-[200px].. yes it will be there in prod build.
+Try to stick with the native tailwid classes if possible..
+
+Cool thing about css is that it also works with HMR.
+
+
+//How to include media query
+
+When my small device threshold crosses change bg color
+    sm:bg-blue-50
+
+
+Pros of Tailwind
+- Easy to Debug 
+- Easy to use
+- No CSS duplication
+- Small bundle size as parcel does kindof tree shaking
+- Dev Time Faster
+- Intuitive
+- More customizable to other similar Libraries
+- No need to move out of current file
+
+Cons to Tailwind
+- Initial Learning Curve
+- Too many classes as project grows so readability reduces .
+
+But it is fine .. cause even css have too many properties to browse through
+Depends on developer requirement.
