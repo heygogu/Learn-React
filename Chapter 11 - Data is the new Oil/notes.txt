@@ -1,0 +1,470 @@
+Handling Data for a web app is the most critical piece
+There are various ways to handle data..
+A web app have a UI Layer(Everything we see on browser).
+And one more layer is there i.e Data Layer***
+This with the UI makes the SPA complete (made of React or Angular etc.)
+
+JSX converted into Js Object using React (help of Babel)
+This big object structure (in React) is known as Virtual DOM.
+Virtual DOM is there for Reconciliation (Diff Calculation between the prev VDOM and new VDOM)
+
+Whole UI Layer is powered by Data Layer
+
+What does Data Layer consist of in React App ? (How UI is rendered with that data , what is used ?)
+-> UI is managed by Data by handling states and props.
+
+
+Difference between State and Props ?
+-> If you want to have a variable whose scope is just within the container or that component.. it is known as local variable i.e state
+-> Prop is the value passed from one component to another component.
+
+*** Props Drilling - When your props go to destination by going through a series of passing through children.
+Ex- You want to use a state of Parent component into children which is very further in hierarchy.
+
+
+
+Install *** React Dev Tools extension in chrome , helpful in Debugging the data layer.
+It is actually hepful in tracking data.
+
+
+ // DO we only manage Data Layer using states and props ???
+
+What if I need to Pass the Data from Child to Parent ?
+-> There are various ways, but there are very less cases for this application to come in light
+   1. Local Storage - Not good 
+   2. Custom Hooks *** (can read data anywhere using hook) (building hooks for this is also not good option)
+   
+
+=> Why emphasize on Data too much ?
+cause Data management will decide whether your app is good, scalable ,reusable or not upto a certain extent
+- So structure your data well
+
+
+=> Is Prop Drilling a Good way ??
+   As my intermediate children might not need the data we are passing to destination.. which will make the code cluttered.
+   It is okay to pass data in 2 or 3 levels of hierarchy.
+   But for passing through 8-10 levels , it is baddd.
+   we use REDUX for it.
+
+More Disadvantage of Props Drilling ?
+-> If a state variable is passes as props and it go through 8-10 levels and you change it in one component,
+   then all the associated component will be re-rendered.
+
+One Amazing Concept ***
+Let's build something in Instamart page
+Suppose my Instamart have many different components
+
+
+const Instamart = () => {
+  return (
+    <div>
+        <h1>Instamart</h1>
+        <h3>100s of components</h3>
+        <AboutInstamart/>
+        <DetailsofInstamart/>
+        <Product/>
+        <Careers/>
+    </div>
+    
+  )
+}
+export default Instamart;
+
+
+Although it have diff components now but the end of the day these are just the sections on the webpage.
+
+Can we make a reusable component section ??
+Let's make a Section component and replace it with components like this
+
+
+const Section=({title})=>{
+  return(
+
+    <div className='border border-black p-2 m-2'>
+      <h3>{title}</h3>
+      <p>{Description}</p>
+    </div>
+  )
+}
+
+
+const Instamart = () => {
+  return (
+    <div>
+        <h1 className='text-3xl p-2 m-2 font-bold'>Instamart</h1>
+        
+        <Section title={"About Instamart"} description={"This is the about section of Instamart"}/>
+
+        {/* <AboutInstamart/>
+        <DetailsofInstamart/>
+        <Product/>
+        <Careers/> */}
+    </div>
+    
+  )
+}
+
+
+Now you can have multiple render of Section component in Instamart using different data .. all possible through props
+
+<Section title={'About Instamart'} description={'This is the about section of Instamart'} />
+
+<Section title={"Team Instamart"} description ={"This is a description about the Instamart"} />
+
+This can have a lot of sections here , suppose I want to build a feature to show and hide the details about a particular section A
+after clicking on it.
+How to do it ?
+
+{isVisible && <p> description </p>}
+
+Now make a dynamic button for show and hide of description.
+i.e we built a Accordion component.
+
+Now I want to build a feature where If I have opened the description of one section
+and I attempt to open the description of another section then the previous section should collapse ..
+How to do that ???
+Its called a collapsible accordiion..
+-> This is example of playing with the data.
+
+As all the sections do not share the state. They have different state and different props
+
+Now we want to change the state of sibling from current section.
+How to do that ??
+-> We can not directly modify it state of sibling.
+
+We have to play a smart game ...
+Instead of sections maintaining their own state , we can maintain the state inside the parent.
+Take the control of Show/Hide from children to the parent .. i.e LIFTING THE STATE UP 
+
+-> Pass isVisible as a prop from parent to sections
+First remove state componentdeclaration from Section and use isVisible as a prop and now
+modify the INstamart component like this
+
+
+const Instamart = () => {
+
+    const [sectionConfig,setSectionConfig]=useState({
+      showAbout:true,
+      showTeam:false,
+      showCareers:true,
+    })
+    return (
+        <div>
+            <h1 className="text-3xl p-2 m-2 font-bold">Instamart</h1>
+
+            <Section title={'About'} description={'This is the about section of Instamart'} 
+            isVisible={sectionConfig.showAbout}
+            />
+
+            <Section title={'Team'} description={'This is a description about the Instamart'} 
+            isVisible={sectionConfig.showTeam}
+            />
+
+            <Section title={'Careers'} description={'This is a career section of the Instamart'} 
+            isVisible={sectionConfig.showCareers}
+            />
+        </div>
+    );
+};
+
+export default Instamart;
+
+
+Now I want if I want to show only one and hide others.
+
+////////////////////////////
+
+ import React, { useState } from 'react';
+
+const Section = ({ title, description, isVisible,setIsVisible}) => {
+    
+    return (
+        <div className="border border-black p-2 m-2">
+            <h3 className="text-3xl font-bold">{title}</h3>
+            {isVisible ? (
+                <button
+                    onClick={function () {
+                        setIsVisible(false);
+                    }}
+                    className="cursor-pointer underline">
+                    Hide
+                </button>
+            ) : (
+                <button
+                    onClick={function () {
+                        setIsVisible(true);
+                    }}
+                    className="cursor-pointer underline">
+                    Show
+                </button>
+            )}
+
+            {isVisible && <p>{description}</p>}
+        </div>
+    );
+};
+
+const Instamart = () => {
+
+    const [sectionConfig,setSectionConfig]=useState({
+      showAbout:false,
+      showTeam:false,
+      showCareers:false,
+    })
+    return (
+        <div>
+            <h1 className="text-3xl p-2 m-2 font-bold">Instamart</h1>
+
+            <Section title={'About'} description={'This is the about section of Instamart'} 
+            isVisible={sectionConfig.showAbout}
+            setIsVisible={()=>setSectionConfig({
+              showAbout:true,
+              showTeam:false,
+              showCareers:false,
+            })}
+            />
+
+            <Section title={'Team'} description={'This is a description about the Instamart'} 
+            isVisible={sectionConfig.showTeam}
+            setIsVisible={()=>setSectionConfig({
+              showAbout:false,
+              showTeam:true,
+              showCareers:false,
+            })}
+            />
+
+            <Section title={'Careers'} description={'This is a career section of the Instamart'} 
+            isVisible={sectionConfig.showCareers}
+            setIsVisible={()=>setSectionConfig({
+              showAbout:false,
+              showTeam:false,
+              showCareers:true,
+            })}
+            />
+        </div>
+    );
+};
+
+export default Instamart;
+
+
+//////////////////////////////////////////////////////////////////////
+
+
+But this is a bad way .. What if there are more sections to add , we have to do so many changes in state declaration
+ and in props passing and setting true and false individually..
+
+This type of code is called as SHIT.
+
+How to optimize this as we need to maintain the data
+
+So let's observe
+The condition is that we need to show one's description at a time.
+We need to track what we need to show.
+1. Create different keys for the sections 
+OR Those keys can be the name of your sections as well.
+I just need to maintain visible section.
+I don't need object now in useState
+You can either keep indexes for section or you can keep it as a key for section
+
+Check the code now and try to understand
+Note 1 - If I use the setter function of a state variable with a callback
+then I can get the current state.. HOw ?
+
+const toggleVisibility = (section) => {
+        setVisibleSection((prevSection) => (prevSection === section ? null : section));
+    };
+  
+Here the prevSection param in callback of setter function stores the value of current state variable.
+
+Note 2 - Remember the fact that component re-renders after state changes , I forgot this concept in this whole coding process
+which made my mind explode. 
+
+
+******************************
+React Dev Tools also provide a Profiler Tool 
+We have to play with it frequently .
+When we have large scale app with so many components it becomes tough to Debugging
+It records the whole journey of rendering of a page.
+
+To use it 
+Open any page you like , start with root for example
+
+Open Profiler tool 
+-> CLick on start profiling (blue dot left , after click becomes red)
+-> Browse through different tabs and then top stop recording
+
+-> You will a flame graph now - shows how much time every component took to load.
+With these things we can make our app performant.
+
+Ranked component will tell you which component took what time. from top to bottom
+
+Works in your localhost .. this is for developers not for production
+***************************
+
+Moving on 
+
+What if there is an api which we give user data and we get an object inside a state variable
+consisting of all fetched data..(useEffect() and useState)
+
+Now I want this info's access everywhere in my project
+whether it is header or card or footer or anywhere.
+Can do that via prop drilling everywhere.
+That is a BAD APPROACH
+
+***
+So, when you have a use case like this when I need same data all across my app
+you have to store it in a Central Space..
+React gives us access to this central space which is known as "React CONTEXT".
+(some big companies also use redux tor to handle this kind of thing)
+
+Redux tor is like a shared state for whole app and any component(all across the app) can use that data.
+
+React CONTEXT is one such thing which can do something similar
+
+There are also other libraries also ngrx, mobx,flux for state management.
+***
+
+React has its own now - React CONTEXT.
+
+Used to make data to make it accessible across the app.
+
+As CONTEXT is shared let's create inside the utils folder
+How to create it ?
+Let's say I want to create usercontext. Try keeping a new context in a new file.
+
+You need to import createContext from react, this createContext is a function at the end of the day
+and it takes the data which you need all across the app.
+
+
+import {createContext} from "react";
+
+const userContext=createContext({
+    user:{
+      name:"Dummy Name",
+      email:"dummy@gmail.com"
+    }
+});
+
+export default userContext;
+
+
+Let's say I want this in my header .
+Import useContext from "react".
+Import userContext from "../component..."
+
+An app can have multiple contexts.
+
+createContext while creating and useContext while using the context component
+
+Context is like useState for your whole app. Can use it whereever you want.
+
+***
+Now, how to use context in class based component
+
+import UserContext from "path"
+
+we will use it as a component here
+
+<UserContext.Consumer>
+                                      
+</UserContext.Consumer>
+
+UserContext is the component name from UserContext file , .Consumer is the react thing
+we do not have a useContext here
+
+This takes in jsx which takes a function and this function will have value of whatever the context is
+
+<UserContext.Consumer>
+     {(value)=> console.log(value)}                                 
+</UserContext.Consumer>
+
+This callback function params will have the values.
+So let's do something like this
+
+<UserContext.Consumer>
+     {(user)=> <h4 className="">{user.name}-{user.email}</h4>}                                 
+</UserContext.Consumer>
+
+**************
+I don't want the dummy name .. I want actual data using api call..
+
+We can modify our context using a Provider just like the Consumer
+
+
+const [user, setUser] = useState({
+        name: 'Rohit',
+        email: 'rohit@gmail.com',
+    });
+
+const AppLayout = () => {
+
+    return (
+    <UserContext.Provider>
+    <Header />
+    <Outlet/>
+    <Footer/>
+    </UserContext.Provider>
+    );
+};
+
+We can modify the value of the context now by passing a prop
+
+ const [user, setUser] = useState({
+        name: 'Rohit',
+        email: 'rohit@gmail.com',
+    });
+    return (
+        <UserContext.Provider value={{
+            user:user,
+        }}>
+            <Header />
+            <Outlet />
+            <Footer />
+        </UserContext.Provider>
+    );
+
+first user is for syntax matching in actual context.
+second user is the data from above state.
+
+When my user data in app.js is updated conetxt will be updated and all places modified.
+
+Where sould I use Provider ??
+Why I wrapped Everything ??
+-> I want to use it everywhere.
+If I don't wrap a component - let's say header is outside Provider 
+and then whole thing is wrapped in React Fragment
+Now if you load the app.. then Header will not have the updated data passed via Router Provider it will only have
+Dummy default data.
+
+
+React Router DOM is using React context behind the scenes.
+Imagine Router Provider and also check components in React Dev Tools.
+
+
+One small problem that developers faced :
+If you check component section using React Dev Tools , you can spot COntext.Provider
+What if we have Multiple Context Providers?
+I can diffrentiate by looking at their data but that is not an efficient APPROACH
+So, React Provides one more feature
+
+Add this line in UserContext.js :
+
+UserContext.displayName="UserContext"
+
+Now in React Dev Tools will Have 
+
+UserContext.Provider instead of Context.Provider.
+
+Homework:- How to manage multiple contexts.
+Can a context come inside another context.
+
+
+Even if the context related variable is inside a lazy loaded component it will update the destiation where it is utilized.
+
+This is because UI layer is different than Data Layer.
+Data Layer Stays intact and UI layer does all the work(reconciliation and all).
+React is very powerful.
+
+
+
